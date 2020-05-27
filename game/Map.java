@@ -26,8 +26,10 @@ public class Map {
 		kit kk = new kit(250, 250);
 		k.add(kk);
 		wallist = new ArrayList<wall>();
-		wall ww = new wall(325,275);
-		wallist.add(ww);
+		wall w1 = new wall(325,275);
+		wall w2 = new wall(375, 275);
+		wallist.add(w1);
+		wallist.add(w2);
 	}
 	
 	protected void loadImage() {

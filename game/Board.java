@@ -1,9 +1,12 @@
 package game;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.Desktop.Action;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -15,22 +18,40 @@ public class Board extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private Timer timer;
-	private Tank1 tanker;
+	private Tank1 tanker1;
 	private Tank2 tanker2;
 	private Map background;
+	private int gamestatus;
 	private final int DELAY=12;
+	private final int P1_WIN = 0;
+	private final int P2_WIN = 1;
+	private final int EVEN = 3;
+	private final int NEXT = 4;
 	
 	
 	public Board() {
-		initBoard();
+		initUI();
+		startGame();
 	}
 	
-	private void initBoard() {
+	private void initUI() {
+		JButton bot = new JButton("Play");
+		this.setLayout(null);//allow using setBounds
+		bot.setBounds(325,100,100,50);
+//		bot.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//			}
+//		});
+		this.add(bot);
+	}
+	
+	private void startGame() {
 		addKeyListener(new TAdapter());
 		setBackground(Color.gray);
 		setFocusable(true);
+		gamestatus = NEXT;
 		background = new Map();
-		tanker = new Tank1(100,100, 3*Math.PI/4,background.getwall()); //start x, start y, start angle, wall
+		tanker1 = new Tank1(100,100, 3*Math.PI/4,background.getwall()); //start x, start y, start angle, wall
 		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall());
 		timer = new Timer(DELAY, this);
 		timer.start();
@@ -41,7 +62,6 @@ public class Board extends JPanel implements ActionListener{
 		super.paintComponent(g);
 		
 		doDrawing(g);
-		
 		//Toolkit.getDefaultToolkit().sync();
 	}
 	
@@ -55,10 +75,10 @@ public class Board extends JPanel implements ActionListener{
         AffineTransform w = new AffineTransform();//wall
         
         //tanker graph
-        t.rotate(tanker.getangle(), tanker.getX()+tanker.getWidth()/2, tanker.getY()+tanker.getHeight()/2);
-        t.translate(tanker.getX(), tanker.getY());
+        t.rotate(tanker1.getangle(), tanker1.getX()+tanker1.getWidth()/2, tanker1.getY()+tanker1.getHeight()/2);
+        t.translate(tanker1.getX(), tanker1.getY());
         t.scale(1, 1); // scale = 1
-		g2d.drawImage(tanker.getImage(), t, this);
+		g2d.drawImage(tanker1.getImage(), t, this);
 
         //tanker2 graph
         t2.rotate(tanker2.getangle(), tanker2.getX()+tanker2.getWidth()/2, tanker2.getY()+tanker2.getHeight()/2);
@@ -67,8 +87,8 @@ public class Board extends JPanel implements ActionListener{
 		g2d.drawImage(tanker2.getImage(), t2, this);
 		
         //shell for tanker graph
-        if(tanker.getShell()!=null) {
-        	for(Shell obj: tanker.getShell()) {
+        if(tanker1.getShell()!=null) {
+        	for(Shell obj: tanker1.getShell()) {
         		s.setTransform(initTrans);
         		s.rotate(obj.getAngle(), obj.getX(), obj.getY());
         		s.translate(obj.getX(), obj.getY());
@@ -100,6 +120,18 @@ public class Board extends JPanel implements ActionListener{
 		
 		//background graph
 		//g2d.drawImage(background.getImage(), 500,500,this);
+        
+        if(gamestatus!=NEXT) {
+        	Graphics2D gwd = (Graphics2D)g;
+        	gwd.setColor(Color.CYAN);
+        	gwd.setFont(new Font("TimesRoman",Font.BOLD,50));
+        	if(gamestatus==P1_WIN)
+        		gwd.drawString("P1 WIN",300,100);
+        	else if(gamestatus==P2_WIN)
+        		gwd.drawString("P2 WIN",300,100);
+        	else if(gamestatus==EVEN)
+        		gwd.drawString("EVEN",300,100);
+        }
 	}
 	
 	@Override
@@ -108,39 +140,63 @@ public class Board extends JPanel implements ActionListener{
 		//update both in a single function
 		updateTanker();
 		updateShell();
+		if(ending_condition() == true) {
+			System.out.println("end the game");
+			//end the game
+		}
 		repaint();
 	}
 	
 	private void updateTanker() {
-		tanker.move();
+		tanker1.move();
 		tanker2.move();
 	}
 	
 	private void updateShell() {
-		if(tanker.getShell()!=null) {
-			for(Shell obj: tanker.getShell()) {
+		if(tanker1.getShell()!=null) {
+			for(Shell obj: tanker1.getShell()) {
 				obj.move();
+				obj.strike(tanker2);
 			}
 		}
 		if(tanker2.getShell()!=null) {
 			for(Shell obj: tanker2.getShell()) {
 				obj.move();
+				obj.strike(tanker1);
 			}
 		}
 	}
 	
+	private boolean ending_condition() {
+		if(tanker1.getArmor()<=0 && tanker2.getArmor()<=0) {
+			gamestatus = EVEN;
+			return true;
+		}
+		else if(tanker2.getArmor()<=0) {
+			gamestatus = P1_WIN;
+			return true;
+		}
+		else if(tanker1.getArmor()<=0) {
+			gamestatus = P2_WIN;
+			return true;
+		}
+		else {
+			gamestatus = NEXT;
+			return false;
+		}
+	}
 	
 	private class TAdapter extends KeyAdapter{
 		
 		@Override
 		public void keyReleased(KeyEvent e) {
-			tanker.keyReleased(e);
+			tanker1.keyReleased(e);
 			tanker2.keyReleased(e);
 		}
 		
 		@Override
 		public void keyPressed(KeyEvent e) {
-			tanker.keyPressed(e);
+			tanker1.keyPressed(e);
 			tanker2.keyPressed(e);
 		}
 	}

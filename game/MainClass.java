@@ -12,7 +12,7 @@ public class MainClass extends JFrame {
 	private void initUI() {
 		add(new Board());
 		setSize(750,600);
-		setTitle("Application");
+		setTitle("JAVA Project Tank game");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);

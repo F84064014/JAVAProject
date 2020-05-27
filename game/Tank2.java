@@ -44,9 +44,9 @@ public class Tank2 extends Tank{
 		
 		
 		if(keybuffer.contains(KeyEvent.VK_D))
-			da = Math.toRadians(this.ROTATION_RAD);
+			da = 3*Math.toRadians(this.ROTATION_RAD);
 		if(keybuffer.contains(KeyEvent.VK_A))
-			da = Math.toRadians(-this.ROTATION_RAD);
+			da = 3*Math.toRadians(-this.ROTATION_RAD);
 		if(keybuffer.contains(KeyEvent.VK_W)) {
 			if(keybuffer.contains(KeyEvent.VK_D)) {
 				dx = MOVING_SPEED*Math.sin(this.angle+da);
@@ -64,10 +64,6 @@ public class Tank2 extends Tank{
 				dy = MOVING_SPEED*Math.cos(this.angle+da);
 				da = 0;
 			}
-			if(detectCollision(wallist))
-			{
-				System.out.println("BOOM");
-			}
 		}
 		if(keybuffer.contains(KeyEvent.VK_S)) {
 			if(keybuffer.contains(KeyEvent.VK_D)) {
@@ -84,10 +80,6 @@ public class Tank2 extends Tank{
 				dx = -MOVING_SPEED*Math.sin(this.angle+da);
 				dy = -MOVING_SPEED*Math.cos(this.angle+da);
 				da = 0;
-			}
-			if(detectCollision(wallist))
-			{
-				System.out.println("BOOM");
 			}
 		}
 	}

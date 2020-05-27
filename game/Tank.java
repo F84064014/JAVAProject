@@ -2,7 +2,9 @@ package game;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.awt.Rectangle;
 
@@ -17,23 +19,27 @@ public abstract class Tank {
 	protected int h;
 	protected double angle;
 	protected List<Shell> tankshell;
-	protected Image image;
 	protected List<wall> wallist;
 	protected List<Integer> keybuffer;
-	//*****
-	protected int health;
+	protected Image image;
+	protected int armor;
 	protected int damage;
-	public void takedamage(int a) {health-=a;} //health-a
-	public void heal(int a) {health+=a;}
-	//******
 	protected int ammo;
 	protected int cdammo;
+	
+	final private int MAX_HEALTH=100;
 	final protected double ROTATION_RAD = 0.65;
 	final protected double MOVING_SPEED = 1.3;
 	final protected int MAX_AMMO = 4;
 	final protected int CD_AMMO = 6;
 	
+	//abstract method
+	protected abstract void loadImage();
+	public abstract void keyPressed(KeyEvent e);
+	public abstract void keyReleased(KeyEvent e);
+	
 	public Tank(int startx, int starty,double startangle, List<wall> wl) {
+		armor = MAX_HEALTH;
 		x = startx;
 		y = starty;
 		angle = startangle;
@@ -44,19 +50,18 @@ public abstract class Tank {
 		ammo = MAX_AMMO;
 		cdammo = CD_AMMO;
 	}
-
-	protected abstract void loadImage();
-	public abstract void keyPressed(KeyEvent e);
-	public abstract void keyReleased(KeyEvent e);
 	
-	public final void move() {
+	public void move() {
 		angle += da;
 		if(angle>2*Math.PI)
 			angle -= 2*Math.PI;
 		else if(angle<-2*Math.PI)
 			angle += 2*Math.PI;
-		x += dx;
-		y -= dy;
+		if(!detectCollision()){
+			x += dx;
+			y -= dy;
+		}
+		this.updateShell();
 	}
 	
 	public double getX() {
@@ -95,14 +100,12 @@ public abstract class Tank {
 		if(this.ammo >= 1)
 		{
 			this.ammo--;
-			Shell temp = new Shell(x+(w/2)+((h+4)*Math.sin(angle))/2, y+(h/2)-((h+4)*Math.cos(angle)/2), angle);
+			Shell temp = new Shell(x+(w/2)+((h+4)*Math.sin(angle))/2, y+(h/2)-((h+4)*Math.cos(angle)/2), angle,wallist);
 			tankshell.add(temp);
-			System.out.println("Roger");
 	
 		}
 		else // reload
 		{
-			System.out.println("Reloading");
 			this.cdammo--;
 			if(this.cdammo <= 0)
 			{
@@ -121,21 +124,49 @@ public abstract class Tank {
 	{
 		return (int)(y+h);
 	}
-	public boolean detectCollision(List<wall> w)
+	public void takedamage(int a) {
+		armor-=a;
+		System.out.println(armor);
+	}
+	public void heal(int a) {
+		armor+=a;
+	}
+	public int getArmor() {
+		return armor;
+	}
+	public boolean detectCollision()
 	{
-		Rectangle rr;
 		Rectangle target ;
-		for(wall obj: w)
-		{
-			rr = new Rectangle((int)this.x, (int)this.y, this.w, this.h);
+		Rectangle rr = new Rectangle((int)((this.x)+dx), (int)((this.y)-dy), this.w, this.h);
+
+		//border collision
+		if(rr.intersectsLine(new Line2D.Float(0,0,750,0))
+				|| rr.intersectsLine(new Line2D.Float(0,0,0,600))
+				|| rr.intersectsLine(new Line2D.Float(0,570,750,570))
+				|| rr.intersectsLine(new Line2D.Float(750,0,750,600))) {
+			return true;
+		}
+		
+		//wall collision
+		for(wall obj: wallist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), (int)obj.getW(),(int)obj.getH());
 			if(rr.intersects(target))
-			{return true;}
-			
-		} // end for
+				return true;
+		}
+		
 		rr = null; target = null;
 		return false;
 	}
+	
+	public void updateShell() {
+		Iterator<Shell> it = tankshell.iterator();
+		while(it.hasNext()) {
+			boolean status = it.next().getStatus();
+			if(status == false)
+				it.remove();
+		}
+	}
+	
 
 }
 

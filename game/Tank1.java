@@ -42,9 +42,9 @@ public class Tank1 extends Tank{
 		
 		
 		if(keybuffer.contains(KeyEvent.VK_RIGHT))
-			da = Math.toRadians(this.ROTATION_RAD);
+			da = 3*Math.toRadians(this.ROTATION_RAD);
 		if(keybuffer.contains(KeyEvent.VK_LEFT))
-			da = Math.toRadians(-this.ROTATION_RAD);
+			da = 3*Math.toRadians(-this.ROTATION_RAD);
 		if(keybuffer.contains(KeyEvent.VK_UP)) {
 			if(keybuffer.contains(KeyEvent.VK_RIGHT)) {
 				dx = MOVING_SPEED*Math.sin(this.angle+da);
@@ -61,10 +61,6 @@ public class Tank1 extends Tank{
 				dx = MOVING_SPEED*Math.sin(this.angle+da);
 				dy = MOVING_SPEED*Math.cos(this.angle+da);
 				da = 0;
-			}
-			if(detectCollision(wallist))
-			{
-				System.out.println("BOOM");
 			}
 		}
 		if(keybuffer.contains(KeyEvent.VK_DOWN)) {
@@ -83,12 +79,7 @@ public class Tank1 extends Tank{
 				dy = -MOVING_SPEED*Math.cos(this.angle+da);
 				da = 0;
 			}
-			if(detectCollision(wallist))
-			{
-				System.out.println("BOOM");
-			}
 		}
-
 	}
 	
 	public void keyReleased(KeyEvent e) {
@@ -100,12 +91,10 @@ public class Tank1 extends Tank{
 			da = 0;
 		}
 		if(key == KeyEvent.VK_RIGHT) {
-			System.out.println("release r");
 			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_RIGHT));
 			da = 0;
 		}
 		if(key == KeyEvent.VK_UP) {
-			System.out.println("release up");
 			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_UP));
 			dy = 0;
 			dx = 0;
