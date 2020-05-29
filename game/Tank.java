@@ -30,7 +30,7 @@ public abstract class Tank {
 	final private int MAX_HEALTH=100;
 	final protected double ROTATION_RAD = 0.65;
 	final protected double MOVING_SPEED = 1.3;
-	final protected int MAX_AMMO = 4;
+	final protected int MAX_AMMO = 5;
 	final protected int CD_AMMO = 6;
 	
 	//abstract method
@@ -133,6 +133,16 @@ public abstract class Tank {
 	}
 	public int getArmor() {
 		return armor;
+	}
+	protected void setArmor(int a) {
+		this.armor = a;
+		ammo = MAX_AMMO;
+		cdammo = CD_AMMO;
+	}
+	protected void setPosition(double px, double py, double pangle) {
+		this.x = px;
+		this.y = py;
+		this.angle = pangle;
 	}
 	public boolean detectCollision()
 	{

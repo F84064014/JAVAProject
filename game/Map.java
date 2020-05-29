@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.*;
 
-public class Map {
+public abstract class Map {
 	
 	protected int x;
 	protected int y;
@@ -13,6 +13,7 @@ public class Map {
 	protected List<kit> k;
  	protected List<wall> wallist;
 	protected Image image;
+	public abstract void setMap();
 	
 	//******
 	public void makekit() {}
@@ -23,13 +24,7 @@ public class Map {
 		x = 400;
 		y = 300;
 		k = new ArrayList<kit>();
-		kit kk = new kit(250, 250);
-		k.add(kk);
 		wallist = new ArrayList<wall>();
-		wall w1 = new wall(325,275);
-		wall w2 = new wall(375, 275);
-		wallist.add(w1);
-		wallist.add(w2);
 	}
 	
 	protected void loadImage() {

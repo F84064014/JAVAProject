@@ -5,12 +5,18 @@ import javax.swing.JFrame;
 
 public class MainClass extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public Board gamebord;
+	
 	public MainClass() {
 		initUI();
 	}
 	
 	private void initUI() {
-		add(new Board());
+		add(gamebord = new Board());
 		setSize(750,600);
 		setTitle("JAVA Project Tank game");
 		setResizable(false);

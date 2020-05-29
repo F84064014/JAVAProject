@@ -21,7 +21,7 @@ public class Shell{
 	protected Line2D traject;
 
 	final protected int DAMAGE = 20;
-	final protected int SPEED = 3;
+	final protected int SPEED = 10;
 	
 	public Shell(double px, double py, double pa, List<wall> wl) {
 		this.set_position(px,py,pa);

@@ -12,9 +12,9 @@ public class wall {
 	protected double w;
 	protected double h;
 	
-	public wall(double wallx, double wally) {
+	public wall(double wallx, double wally, String filepath) {
 		
-		ImageIcon ii = new ImageIcon("src/resources/xx.png");
+		ImageIcon ii = new ImageIcon(filepath);
 		image = ii.getImage();
 	
 		x = wallx;
