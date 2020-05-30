@@ -1,16 +1,44 @@
 package game;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
 public class Tank2 extends Tank{
 	
-	public Tank2(int startx, int starty, double startangle, List<wall> wl) {
-		super(startx, starty, startangle, wl);
+	final private int MAX_HEALTH= 200;
+	final private double ROTATION_RAD = 0.65;
+	final private double MOVING_SPEED = 0.3;
+	final private int MAX_AMMO = 1;
+	final private int CD_AMMO = 3;
+	final private int DAMAGE = 20;
+	final private int SHELL_SPEED = 13;
+	
+	public int getMAX_HEALTH() {
+		return this.MAX_HEALTH;
+	}
+	public double getROTATION_RAD() {
+		return this.ROTATION_RAD;
+	}
+	public double getMOVING_SPEED() {
+		return this.MOVING_SPEED;
+	}
+	public int getMAX_AMMO() {
+		return this.MAX_AMMO;
+	}
+	public int getCD_AMMO() {
+		return this.CD_AMMO;
+	}
+	public int getDAMAGE() {
+		return this.DAMAGE;
+	}
+	public int getSHELL_SPEED() {
+		return this.SHELL_SPEED;
+	}
+	
+	public Tank2(int startx, int starty, double startangle, List<wall> wl, String ctrset) {
+		super(startx, starty, startangle, wl, ctrset);
 		this.wallist = wl;
 		loadImage();
 		tankshell = new ArrayList<Shell>();
@@ -22,95 +50,10 @@ public class Tank2 extends Tank{
 	@Override
 	protected void loadImage() {
 		
-		ImageIcon ii = new ImageIcon("src/resources/tanker2.png");
+		ImageIcon ii = new ImageIcon("src/resources/heavytank.png");
 		image = ii.getImage();
 		
 		w = image.getWidth(null);
 		h = image.getHeight(null);
-	}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_A) 
-			keybuffer.add(KeyEvent.VK_A);
-		if(key == KeyEvent.VK_D)
-			keybuffer.add(KeyEvent.VK_D);
-		if(key == KeyEvent.VK_W)
-			keybuffer.add(KeyEvent.VK_W);
-		if(key == KeyEvent.VK_S)
-			keybuffer.add(KeyEvent.VK_S);
-		
-		
-		if(keybuffer.contains(KeyEvent.VK_D))
-			da = 3*Math.toRadians(this.ROTATION_RAD);
-		if(keybuffer.contains(KeyEvent.VK_A))
-			da = 3*Math.toRadians(-this.ROTATION_RAD);
-		if(keybuffer.contains(KeyEvent.VK_W)) {
-			if(keybuffer.contains(KeyEvent.VK_D)) {
-				dx = MOVING_SPEED*Math.sin(this.angle+da);
-				dy = MOVING_SPEED*Math.cos(this.angle+da);
-				da = Math.toRadians(this.ROTATION_RAD);
-
-			}
-			else if(keybuffer.contains(KeyEvent.VK_A)) {
-				dx = MOVING_SPEED*Math.sin(this.angle+da);
-				dy = MOVING_SPEED*Math.cos(this.angle+da);
-				da = Math.toRadians(-this.ROTATION_RAD);
-			}
-			else {
-				dx = MOVING_SPEED*Math.sin(this.angle+da);
-				dy = MOVING_SPEED*Math.cos(this.angle+da);
-				da = 0;
-			}
-		}
-		if(keybuffer.contains(KeyEvent.VK_S)) {
-			if(keybuffer.contains(KeyEvent.VK_D)) {
-				dx = -MOVING_SPEED*Math.sin(this.angle+da);
-				dy = -MOVING_SPEED*Math.cos(this.angle+da);
-				da = Math.toRadians(this.ROTATION_RAD);
-			}
-			else if(keybuffer.contains(KeyEvent.VK_A)) {
-				dx = -MOVING_SPEED*Math.sin(this.angle+da);
-				dy = -MOVING_SPEED*Math.cos(this.angle+da);
-				da = Math.toRadians(-this.ROTATION_RAD);
-			}
-			else {
-				dx = -MOVING_SPEED*Math.sin(this.angle+da);
-				dy = -MOVING_SPEED*Math.cos(this.angle+da);
-				da = 0;
-			}
-		}
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		
-		int key = e.getKeyCode();
-		
-		if(key == KeyEvent.VK_A) {
-			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_A));
-			da = 0;
-		}
-		if(key == KeyEvent.VK_D) {
-			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_D));
-			da = 0;
-		}
-		if(key == KeyEvent.VK_W) {
-			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_W));
-			dy = 0;
-			dx = 0;
-			da = 0;
-		}
-		if(key == KeyEvent.VK_S) {
-			keybuffer.removeAll(Arrays.asList(KeyEvent.VK_S));
-			dx = 0;
-			dy = 0;
-			da = 0;
-		}
-		if(key == KeyEvent.VK_F) {
-			fire();
-		}
 	}
 }

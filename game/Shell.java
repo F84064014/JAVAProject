@@ -20,15 +20,17 @@ public class Shell{
 	protected List<wall> wallist;
 	protected Line2D traject;
 
-	final protected int DAMAGE = 20;
-	final protected int SPEED = 10;
+	private int DAMAGE;
+	private int SPEED;
 	
-	public Shell(double px, double py, double pa, List<wall> wl) {
+	public Shell(double px, double py, double pa, List<wall> wl, int damage, int speed) {
 		this.set_position(px,py,pa);
 		this.loadImage();
 		wallist = wl;
 		hasshot = false;
 		shellStatus = true;
+		DAMAGE = damage;
+		SPEED = speed;
 	}
 	
 	public void loadImage() {

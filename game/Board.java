@@ -24,7 +24,7 @@ public class Board extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private Timer timer;
-	private Tank1 tanker1;
+	private Tank tanker1;
 	private Tank2 tanker2;
 	private Map background;
 	private int gamestatus;
@@ -102,11 +102,11 @@ public class Board extends JPanel implements ActionListener{
 	
 	private void startGame() {
 		addKeyListener(new TAdapter());
-		setBackground(Color.gray);
+		setBackground(Color.DARK_GRAY);
 		setFocusable(true);
 		background = new Map();
-		tanker1 = new Tank1(100,100, 3*Math.PI/4,background.getwall()); //start x, start y, start angle, wall
-		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall());
+		tanker1 = new Tank2(100,100, 3*Math.PI/4,background.getwall(), "set1"); //start x, start y, start angle, wall, controlset
+		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall(), "set2");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
