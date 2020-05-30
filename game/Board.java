@@ -1,9 +1,11 @@
 package game;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -24,6 +26,11 @@ public class Board extends JPanel implements ActionListener{
 	private Tank2 tanker2;
 	private Map background;
 	private int gamestatus;
+	private Image menuanimation;
+	private double animationangle;
+	private double animationx;
+	private double animationy;
+	private final double ANIMATION_SPEED = 1;
 	public static final int DELAY=14;
 	public static final int P1_WIN = 0;
 	public static final int P2_WIN = 1;
@@ -41,6 +48,14 @@ public class Board extends JPanel implements ActionListener{
 	}
 	
 	private void initUI() {
+		//menu animation
+		ImageIcon ii = new ImageIcon("src/resources/tanker.png");
+		menuanimation = ii.getImage();
+		animationangle = Math.toRadians(90);
+		animationx = 375;
+		animationy = 100;
+		
+		//game status control
 		gamestatus = MENU;
 		menubtnlist = new ArrayList<JButton>();
 		returnbtnlist = new ArrayList<JButton>();
@@ -48,15 +63,20 @@ public class Board extends JPanel implements ActionListener{
 		BtnListener BtnListen = new BtnListener(this);
 		
 		
-		JButton Button1 = new JButton("Play");
-		Button1.setBounds(325, 100, 100, 60);
-		this.add(Button1);
-		Button1.addActionListener(BtnListen);
+		JButton playButton = new JButton("Play");
+		playButton.setBounds(325, 100, 100, 60);
+		this.add(playButton);
+		playButton.addActionListener(BtnListen);
 
-		JButton Button2 = new JButton("bt2");
-		Button2.setBounds(325, 200, 100, 60);
-		this.add(Button2);
-		Button2.addActionListener(BtnListen);
+		JButton nextmap = new JButton("next");
+		nextmap.setBounds(425, 200, 75, 30);
+		this.add(nextmap);
+		nextmap.addActionListener(BtnListen);
+		
+		JButton lastmap = new JButton("last");
+		lastmap.setBounds(225, 200, 75, 30);
+		this.add(lastmap);
+		lastmap.addActionListener(BtnListen);
 		
 		JButton returnButton = new JButton("return to Menu");
 		returnButton.setBounds(275, 200, 250, 60);
@@ -72,15 +92,17 @@ public class Board extends JPanel implements ActionListener{
 		
 		returnbtnlist.add(returnButton);
 		returnbtnlist.add(restartButton);
-		menubtnlist.add(Button1);
-		menubtnlist.add(Button2);
+		menubtnlist.add(playButton);
+		menubtnlist.add(nextmap);
+		menubtnlist.add(lastmap);
+		
 	}
 	
 	private void startGame() {
 		addKeyListener(new TAdapter());
 		setBackground(Color.gray);
 		setFocusable(true);
-		background = new Map_basic();
+		background = new Map();
 		tanker1 = new Tank1(100,100, 3*Math.PI/4,background.getwall()); //start x, start y, start angle, wall
 		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall());
 		timer = new Timer(DELAY, this);
@@ -92,6 +114,8 @@ public class Board extends JPanel implements ActionListener{
 		super.paintComponent(g);
 		if(gamestatus != MENU)
 			doDrawing(g);
+		if(gamestatus == MENU)
+			DrawMenu(g);
 		//Toolkit.getDefaultToolkit().sync();
 	}
 	
@@ -164,9 +188,29 @@ public class Board extends JPanel implements ActionListener{
         }
 	}
 	
+	public void DrawMenu(Graphics g){
+		
+		//menu animation
+    	Graphics2D g2d = (Graphics2D)g;
+        AffineTransform animation = new AffineTransform();//animation
+        animation.rotate(animationangle, animationx+menuanimation.getWidth(null)/2, animationy+menuanimation.getHeight(null)/2);
+        animation.translate(animationx, animationy);
+        animation.scale(1, 1); // scale = 1
+		g2d.drawImage(menuanimation, animation, this);
+		animationangle+=Math.toRadians(0.3);
+		animationx += ANIMATION_SPEED*Math.sin(animationangle);
+		animationy -= ANIMATION_SPEED*Math.cos(animationangle);
+		
+		//choose map
+    	Graphics2D gwd = (Graphics2D)g;
+    	gwd.setColor(Color.black);
+    	gwd.setFont(new Font("TimesRoman",Font.BOLD,30));
+    	gwd.drawString(background.getName(), 310, 220);
+    	
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
 		//update both in a single function
 		if(gamestatus == NEXT) {
 			updateTanker();
@@ -179,6 +223,7 @@ public class Board extends JPanel implements ActionListener{
 		}
 		if(gamestatus == Board.MENU) {
 			updateGameSet();
+			repaint();
 		}
 		if(gamestatus == Board.RESTART) {
 			updateGameSet();
@@ -228,8 +273,14 @@ public class Board extends JPanel implements ActionListener{
 	private void updateGameSet() {
 		tanker1.setArmor(100);
 		tanker2.setArmor(100);
+    	tanker1.getShell().clear();
+    	tanker2.getShell().clear();
 		tanker1.setPosition(100,100, 3*Math.PI/4);
 		tanker2.setPosition(600,500, -Math.PI/4);
+	}
+	
+	public void setGameMap(String name) {
+		this.background.setMap(name);
 	}
 	
 	private void returntoMenu() {

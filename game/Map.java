@@ -4,16 +4,17 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.util.*;
 
-public abstract class Map {
+public class Map {
 	
 	protected int x;
 	protected int y;
 	protected int w;
 	protected int h;
-	protected List<kit> k;
+	protected List<kit> kitlist;
  	protected List<wall> wallist;
 	protected Image image;
-	public abstract void setMap();
+	protected String name;
+
 	
 	//******
 	public void makekit() {}
@@ -23,8 +24,9 @@ public abstract class Map {
 		loadImage();
 		x = 400;
 		y = 300;
-		k = new ArrayList<kit>();
+		kitlist = new ArrayList<kit>();
 		wallist = new ArrayList<wall>();
+		setMap("default");
 	}
 	
 	protected void loadImage() {
@@ -50,5 +52,34 @@ public abstract class Map {
 	
 	public List<wall> getwall(){
 		return wallist;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setMap(String mapname) {
+		this.name = mapname;
+		wallist.clear();
+		kitlist.clear();
+		if(mapname.equals("default")) {
+			wall w1 = new wall(325,275,"src/resources/bedrock.png");
+			wall w2 = new wall(375, 275, "src/resources/bedrock.png");
+			wall w3 = new wall(400, 400, "src/resources/bedrock.png");
+			wallist.add(w1);
+			wallist.add(w2);
+			wallist.add(w3);
+		}
+		if(mapname.equals("test1")) {
+			wall w1 = new wall(300, 300, "src/resources/xx.png");
+			wallist.add(w1);
+		}
+		if(mapname.equals("test2")) {
+			wall w1 = new wall(400, 388, "src/resources/xx.png");
+			wall w2 = new wall(444,333, "src/resources/bedrock.png");
+			wallist.add(w1);
+			wallist.add(w2);
+		}
+		
 	}
 }

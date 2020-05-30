@@ -2,6 +2,8 @@ package game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -9,10 +11,17 @@ import javax.swing.JButton;
 public class BtnListener implements ActionListener{
 	
 	private Board gameboard;
+	private List<String> maplist;
+	private int curmap;
 	
 	
 	public BtnListener(Board b) {
 		this.gameboard = b;
+		maplist = new ArrayList<String>();
+		maplist.add("default");
+		maplist.add("test1");
+		maplist.add("test2");
+		curmap=0;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -40,6 +49,19 @@ public class BtnListener implements ActionListener{
 				((AbstractButton) obj).setVisible(false);
 			}
 			this.gameboard.setGameStatus(Board.RESTART);
+		}
+		if(comStr.equals("next")) {
+			curmap++;
+			if(curmap >= maplist.size())
+				curmap = 0;
+			this.gameboard.setGameMap(maplist.get(curmap));
+		}
+		
+		if(comStr.equals("last")) {
+			curmap--;
+			if(curmap < 0)
+				curmap = maplist.size()-1;
+			this.gameboard.setGameMap(maplist.get(curmap));
 		}
 	}
 }
