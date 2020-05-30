@@ -6,8 +6,10 @@ import javax.swing.JPanel;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -204,8 +206,13 @@ public class Board extends JPanel implements ActionListener{
 		//choose map
     	Graphics2D gwd = (Graphics2D)g;
     	gwd.setColor(Color.black);
-    	gwd.setFont(new Font("TimesRoman",Font.BOLD,30));
-    	gwd.drawString(background.getName(), 310, 220);
+    	Font mapfont = new Font("TimesRoman",Font.BOLD,30);
+    	FontMetrics metrics = gwd.getFontMetrics(mapfont);
+    	Rectangle rect = new Rectangle(310,194,50,50);
+    	int x = rect.x + (rect.width-metrics.stringWidth(background.getName())/2);
+    	int y = rect.y + ((rect.height - metrics.getHeight())/2)+metrics.getAscent();
+    	gwd.setFont(mapfont);
+    	gwd.drawString(background.getName(),x,y);
     	
 	}
 	
