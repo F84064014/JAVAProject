@@ -43,6 +43,8 @@ public class Board extends JPanel implements ActionListener{
 	
 	private List<JButton> menubtnlist;
 	private List<JButton> returnbtnlist;
+	private List<Tank> playerlist1;
+	private List<Tank> playerlist2;
 	
 	public Board() {
 		initUI();
@@ -105,8 +107,14 @@ public class Board extends JPanel implements ActionListener{
 		setBackground(Color.DARK_GRAY);
 		setFocusable(true);
 		background = new Map();
-		tanker1 = new Tank2(100,100, 3*Math.PI/4,background.getwall(), "set1"); //start x, start y, start angle, wall, controlset
-		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall(), "set2");
+		
+		playerlist1 = new ArrayList<Tank>();
+		playerlist1.add(tanker2);
+		playerlist2 = new ArrayList<Tank>();
+		playerlist2.add(tanker1);
+		//start x, start y, start angle, wall, playerlist, controlset
+		tanker1 = new Tank1(100,100, 3*Math.PI/4,background.getwall(),playerlist1, "set1"); 
+		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall(),playerlist2, "set2");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -124,23 +132,42 @@ public class Board extends JPanel implements ActionListener{
 	private void doDrawing(Graphics g) {
 		
 		Graphics2D g2d = (Graphics2D) g;
+		Graphics2D gsc = (Graphics2D) g;
 		AffineTransform initTrans = new AffineTransform(); //initialization
         AffineTransform t = new AffineTransform();//tanker
         AffineTransform t2 = new AffineTransform();//tanker2
         AffineTransform s = new AffineTransform();//shell
         AffineTransform w = new AffineTransform();//wall
         
-        //tanker graph
+        //tanker1 graph
         t.rotate(tanker1.getangle(), tanker1.getX()+tanker1.getWidth()/2, tanker1.getY()+tanker1.getHeight()/2);
         t.translate(tanker1.getX(), tanker1.getY());
         t.scale(1, 1); // scale = 1
 		g2d.drawImage(tanker1.getImage(), t, this);
+		//tanker1 Armor graph
+		gsc.setColor(Color.BLACK);
+        gsc.drawRect((int)tanker1.getX()-10, (int)tanker1.getY()-20,40, 5);
+      	gsc.setColor(Color.GREEN);
+        if(tanker1.getArmor() > 0) {
+        	for(int i=(int)tanker1.getY()-20; i<(int)tanker1.getY()-20+5;i++) {
+        		gsc.drawLine((int)tanker1.getX()-10,i,((int)tanker1.getX()+(int)((double)tanker1.getArmor()/(double)tanker1.getMAX_ARMOR()*40))-10,i);
+        	}
+        }
+        
 
         //tanker2 graph
         t2.rotate(tanker2.getangle(), tanker2.getX()+tanker2.getWidth()/2, tanker2.getY()+tanker2.getHeight()/2);
         t2.translate(tanker2.getX(), tanker2.getY());
         t2.scale(1, 1); // scale = 1
 		g2d.drawImage(tanker2.getImage(), t2, this);
+		gsc.setColor(Color.BLACK);
+        gsc.drawRect((int)tanker2.getX()-10, (int)tanker2.getY()-20,40, 5);
+      	gsc.setColor(Color.RED);
+        if(tanker2.getArmor() > 0) {
+        	for(int i=(int)tanker2.getY()-20; i<(int)tanker2.getY()-20+5;i++) {
+        		gsc.drawLine((int)tanker2.getX()-10,i,((int)tanker2.getX()+(int)((double)tanker2.getArmor()/(double)tanker2.getMAX_ARMOR()*40))-10,i);
+        	}
+        }
 		
         //shell for tanker graph
         if(tanker1.getShell()!=null) {
@@ -279,11 +306,15 @@ public class Board extends JPanel implements ActionListener{
 	
 	private void updateGameSet() {
 		tanker1.setArmor(100);
-		tanker2.setArmor(100);
+		tanker2.setArmor(200);
     	tanker1.getShell().clear();
     	tanker2.getShell().clear();
 		tanker1.setPosition(100,100, 3*Math.PI/4);
 		tanker2.setPosition(600,500, -Math.PI/4);
+		playerlist1.clear();
+		playerlist2.clear();
+		playerlist2.add(tanker1);
+		playerlist1.add(tanker2);
 	}
 	
 	public void setGameMap(String name) {

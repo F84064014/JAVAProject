@@ -3,7 +3,6 @@ package game;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Line2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -12,26 +11,27 @@ import java.awt.Rectangle;
 
 public abstract class Tank {
 	
-	protected double dx;
-	protected double dy;
-	protected double da;
-	protected double x;
-	protected double y;
-	protected int w;
-	protected int h;
-	protected double angle;
-	protected List<Shell> tankshell;
-	protected List<wall> wallist;
-	protected List<Integer> keybuffer;
-	protected List<Integer> controlset;
-	protected Image image;
-	protected int armor;
-	protected int damage;
-	protected int ammo;
-	protected int cdammo;
+	private double dx;
+	private double dy;
+	private double da;
+	private double x;
+	private double y;
+	private int w;
+	private int h;
+	private double angle;
+	private List<Shell> tankshell;
+	private List<wall> wallist;
+	private List<Integer> keybuffer;
+	private List<Integer> controlset;
+	private List<Tank> playerlist;
+	private Image image;
+	private int armor;
+	private int ammo;
+	private int cdammo;
 	
-	
-	public abstract int getMAX_HEALTH();
+		//abstract method
+	protected abstract void loadImage();
+	public abstract int getMAX_ARMOR();
 	public abstract double getROTATION_RAD(); 
 	public abstract double getMOVING_SPEED();
 	public abstract int getMAX_AMMO();
@@ -39,15 +39,14 @@ public abstract class Tank {
 	public abstract int getDAMAGE();
 	public abstract int getSHELL_SPEED();
 	
-	//abstract method
-	protected abstract void loadImage();
 	
-	public Tank(int startx, int starty,double startangle, List<wall> wl, String ctrset) {
-		armor = getMAX_HEALTH();
+	public Tank(int startx, int starty,double startangle, List<wall> wl, List<Tank> pl, String ctrset) {
+		armor = getMAX_ARMOR();
 		x = startx;
 		y = starty;
 		angle = startangle;
 		this.wallist = wl;
+		this.playerlist = pl;
 		loadImage();
 		tankshell = new ArrayList<Shell>();
 		keybuffer = new ArrayList<Integer>();
@@ -124,13 +123,11 @@ public abstract class Tank {
 				dx = getMOVING_SPEED()*Math.sin(this.angle+da);
 				dy = getMOVING_SPEED()*Math.cos(this.angle+da);
 				da = Math.toRadians(this.getROTATION_RAD());
-				System.out.println("upright");
 			}
 			else if(keybuffer.contains(controlset.get(2))) {
 				dx = getMOVING_SPEED()*Math.sin(this.angle+da);
 				dy = getMOVING_SPEED()*Math.cos(this.angle+da);
 				da = Math.toRadians(-this.getROTATION_RAD());
-				System.out.println("upleft");
 			}
 			else {
 				dx = getMOVING_SPEED()*Math.sin(this.angle+da);
@@ -187,6 +184,17 @@ public abstract class Tank {
 		
 		return w;
 	}
+	
+	public void setWidth(int pw) {
+		
+		this.w = pw;
+	}
+	
+	public void setHeight(int ph) {
+		
+		this.h = ph;
+	}
+	
 	public int getHeight() {
 		
 		return h;
@@ -195,9 +203,20 @@ public abstract class Tank {
 		
 		return image;
 	}
+	public void setImage(Image pi) {
+		this.image = pi;
+	}
 	
 	public List<Shell> getShell() {
 		return tankshell;
+	}
+	
+	public void setAmmo(int pa) {
+		this.ammo = pa;
+	}
+	
+	public void setCDAmmo(int pc) {
+		this.cdammo = pc;
 	}
 	
 	public void fire() {
@@ -230,7 +249,6 @@ public abstract class Tank {
 	}
 	public void takedamage(int a) {
 		armor-=a;
-		System.out.println(armor);
 	}
 	public void heal(int a) {
 		armor+=a;
@@ -264,6 +282,13 @@ public abstract class Tank {
 		//wall collision
 		for(wall obj: wallist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), (int)obj.getW(),(int)obj.getH());
+			if(rr.intersects(target))
+				return true;
+		}
+		
+		//player collision
+		for(Tank obj: playerlist) {
+			target = new Rectangle((int)obj.getX(), (int)obj.getY(), obj.getWidth(), obj.getHeight());
 			if(rr.intersects(target))
 				return true;
 		}

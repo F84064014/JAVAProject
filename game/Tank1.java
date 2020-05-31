@@ -1,6 +1,5 @@
 package game;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -15,7 +14,7 @@ public class Tank1 extends Tank{
 	final private int DAMAGE = 10;
 	final private int SHELL_SPEED = 10;
 	
-	public int getMAX_HEALTH() {
+	public int getMAX_ARMOR() {
 		return this.MAX_HEALTH;
 	}
 	public double getROTATION_RAD() {
@@ -37,24 +36,20 @@ public class Tank1 extends Tank{
 		return this.SHELL_SPEED;
 	}
 	
-	public Tank1(int startx, int starty, double startangle, List<wall> wl, String ctrset) {
-		super(startx, starty, startangle, wl, ctrset);
-		this.wallist = wl;
+	public Tank1(int startx, int starty, double startangle, List<wall> wl, List<Tank> pl, String ctrset) {
+		super(startx, starty, startangle, wl, pl, ctrset);
 		loadImage();
-		tankshell = new ArrayList<Shell>();
-		keybuffer = new ArrayList<Integer>();
 		setArmor(this.MAX_HEALTH);
-		ammo = MAX_AMMO;
-		cdammo = CD_AMMO;
+		setAmmo(this.MAX_AMMO);
+		setCDAmmo(this.CD_AMMO);
 	}
 	
 	protected void loadImage() {
 		
 		ImageIcon ii = new ImageIcon("src/resources/tanker.png");
-		image = ii.getImage();
-		
-		w = image.getWidth(null);
-		h = image.getHeight(null);
+		setImage(ii.getImage());	
+		setWidth(this.getImage().getWidth(null));
+		setHeight(this.getImage().getHeight(null));
 	}
 	
 
