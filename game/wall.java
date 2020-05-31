@@ -6,11 +6,11 @@ import javax.swing.ImageIcon;
 
 public class wall {
 	
-	protected double x;
-	protected double y;
-	protected Image image;
-	protected double w;
-	protected double h;
+	private double x;
+	private double y;
+	private Image image;
+	private double w;
+	private double h;
 	
 	public wall(double wallx, double wally, String filepath) {
 		

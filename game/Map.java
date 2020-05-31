@@ -6,14 +6,14 @@ import java.util.*;
 
 public class Map {
 	
-	protected int x;
-	protected int y;
-	protected int w;
-	protected int h;
-	protected List<kit> kitlist;
- 	protected List<wall> wallist;
-	protected Image image;
-	protected String name;
+	private int x;
+	private int y;
+	private int w;
+	private int h;
+	private List<kit> kitlist;
+ 	private List<wall> wallist;
+ 	private Image image;
+	private String name;
 
 	
 	//******

@@ -39,7 +39,7 @@ public class Tank2 extends Tank{
 	public Tank2(int startx, int starty, double startangle, List<wall> wl,List<Tank> pl, String ctrset) {
 		super(startx, starty, startangle, wl, pl, ctrset);
 		loadImage();
-		setArmor(this.MAX_HEALTH);
+		resetArmor();
 		setAmmo(this.MAX_AMMO);
 		setCDAmmo(this.CD_AMMO);
 	}

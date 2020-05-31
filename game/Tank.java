@@ -153,6 +153,9 @@ public abstract class Tank {
 			}
 		}
 		
+
+		machinegun();//Override if you need machine gun
+		
 		angle += da;
 		if(angle>2*Math.PI)
 			angle -= 2*Math.PI;
@@ -175,7 +178,7 @@ public abstract class Tank {
 		return y;		
 	}
 	
-	public double getangle() {
+	public double getAngle() {
 		
 		return angle;
 	}
@@ -214,9 +217,41 @@ public abstract class Tank {
 	public void setAmmo(int pa) {
 		this.ammo = pa;
 	}
+	public int getAmmo() {
+		return this.ammo;
+	}
 	
 	public void setCDAmmo(int pc) {
 		this.cdammo = pc;
+	}
+	
+	public List<Integer> getControlSet() {
+		return controlset;
+	}
+	
+	public List<Integer> getKeyBuffer(){
+		return keybuffer;
+	}
+	public List<wall> getWallist(){
+		return wallist;
+	}
+	public void setDX(double d) {
+		dx = d;
+	}
+	public void setDY(double d) {
+		dy = d;
+	}
+	public void setDA(double d) {
+		da = d;
+	}
+	public double getDX() {
+		return dx;
+	}
+	public double getDY() {
+		return dy;
+	}
+	public double getDA() {
+		return da;
 	}
 	
 	public void fire() {
@@ -256,8 +291,8 @@ public abstract class Tank {
 	public int getArmor() {
 		return armor;
 	}
-	protected void setArmor(int a) {
-		this.armor = a;
+	protected void resetArmor() {
+		this.armor = getMAX_ARMOR();
 		ammo = getMAX_AMMO();
 		cdammo = getCD_AMMO();
 	}
@@ -304,6 +339,10 @@ public abstract class Tank {
 			if(status == false)
 				it.remove();
 		}
+	}
+	
+	public void machinegun() {
+		return;
 	}
 	
 
