@@ -8,12 +8,12 @@ import javax.swing.ImageIcon;
 
 public class Tank3 extends Tank{
 
-	final private int MAX_HEALTH= 200;
+	final private int MAX_HEALTH= 500;
 	final private double ROTATION_RAD = 0.65;
 	final private double MOVING_SPEED = 1.3;
-	final private int MAX_AMMO = 100;
+	final private int MAX_AMMO = 200;
 	final private int CD_AMMO = 10;
-	final private int DAMAGE = 1;
+	final private int DAMAGE = 2;
 	final private int SHELL_SPEED = 13;
 	private long refillCD;
 	
@@ -110,8 +110,7 @@ public class Tank3 extends Tank{
 				setDY(0.1*getDY());
 				setDA(0.1*getDA());
 			}
-			for(int i=0;i<2;i++)
-				fire();
+			fire();
 		}
 	}
 	

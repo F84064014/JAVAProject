@@ -25,7 +25,7 @@ public class Board extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	private Timer timer;
 	private Tank tanker1;
-	private Tank2 tanker2;
+	private Tank tanker2;
 	private Map background;
 	private int gamestatus;
 	private Image menuanimation;
@@ -94,17 +94,41 @@ public class Board extends JPanel implements ActionListener{
 		restartButton.addActionListener(BtnListen);
 		restartButton.setVisible(false);
 		
+		JButton nextTank1Button = new JButton("nextTank1");
+		nextTank1Button.setBounds(425, 250, 75,30);
+		this.add(nextTank1Button);
+		nextTank1Button.addActionListener(BtnListen);
+		
+		JButton lastTank1Button = new JButton("lastTank1");
+		lastTank1Button.setBounds(225, 250, 75,30);
+		this.add(lastTank1Button);
+		lastTank1Button.addActionListener(BtnListen);
+		
+		JButton nextTank2Button = new JButton("nextTank2");
+		nextTank2Button.setBounds(425, 300, 75,30);
+		this.add(nextTank2Button);
+		nextTank2Button.addActionListener(BtnListen);
+		
+		JButton lastTank2Button = new JButton("lastTank2");
+		lastTank2Button.setBounds(225, 300, 75,30);
+		this.add(lastTank2Button);
+		lastTank2Button.addActionListener(BtnListen);
+		
 		returnbtnlist.add(returnButton);
 		returnbtnlist.add(restartButton);
 		menubtnlist.add(playButton);
 		menubtnlist.add(nextmap);
 		menubtnlist.add(lastmap);
+		menubtnlist.add(lastTank1Button);
+		menubtnlist.add(nextTank1Button);
+		menubtnlist.add(lastTank2Button);
+		menubtnlist.add(nextTank2Button);
 		
 	}
 	
 	private void startGame() {
 		addKeyListener(new TAdapter());
-		setBackground(Color.DARK_GRAY);
+		setBackground(Color.white);
 		setFocusable(true);
 		background = new Map();
 		
@@ -113,8 +137,8 @@ public class Board extends JPanel implements ActionListener{
 		playerlist2 = new ArrayList<Tank>();
 		playerlist2.add(tanker1);
 		//start x, start y, start angle, wall, playerlist, controlset
-		tanker1 = new Tank3(100,100, 3*Math.PI/4,background.getwall(),playerlist1, "set1"); 
-		tanker2 = new Tank2(600,500, -Math.PI/4,background.getwall(),playerlist2, "set2");
+		tanker1 = new Tank1(100,100, 3*Math.PI/4,background.getwall(),playerlist1, "set1"); 
+		tanker2 = new Tank1(600,500, -Math.PI/4,background.getwall(),playerlist2, "set2");
 		timer = new Timer(DELAY, this);
 		timer.start();
 	}
@@ -221,7 +245,11 @@ public class Board extends JPanel implements ActionListener{
 		
 		//menu animation
     	Graphics2D g2d = (Graphics2D)g;
+    	AffineTransform initTrans = new AffineTransform();//initilization
         AffineTransform animation = new AffineTransform();//animation
+        AffineTransform tankdemo = new AffineTransform();
+        
+        //draw animation
         animation.rotate(animationangle, animationx+menuanimation.getWidth(null)/2, animationy+menuanimation.getHeight(null)/2);
         animation.translate(animationx, animationy);
         animation.scale(1, 1); // scale = 1
@@ -241,6 +269,19 @@ public class Board extends JPanel implements ActionListener{
     	gwd.setFont(mapfont);
     	gwd.drawString(background.getName(),x,y);
     	
+    	//choose tanker1
+    	tankdemo.rotate(animationangle, 355+tanker1.getWidth()/2, 250+tanker1.getHeight()/2);
+    	tankdemo.translate(355,250);
+    	tankdemo.scale(1,1);
+    	g2d.drawImage(tanker1.getImage(), tankdemo, this);
+    	tankdemo = initTrans;
+    	
+    	//choose tanker1
+    	tankdemo.rotate(animationangle, 355+tanker2.getWidth()/2, 300+tanker2.getHeight()/2);
+    	tankdemo.translate(355,300);
+    	tankdemo.scale(1,1);
+    	g2d.drawImage(tanker2.getImage(), tankdemo, this);
+    	tankdemo = initTrans;
 	}
 	
 	@Override
@@ -319,6 +360,41 @@ public class Board extends JPanel implements ActionListener{
 	
 	public void setGameMap(String name) {
 		this.background.setMap(name);
+	}
+	
+	public void setTankType(String typename, String tank) {
+		Tank temp = null;
+		String cset = "set1";
+		List <Tank> plylist = playerlist1;
+		
+		if(tank.equals("tanker1")) {
+			cset = "set1";
+			plylist = playerlist1;
+		}
+		else if(tank.equals("tanker2")) {
+			cset = "set2";
+			plylist = playerlist2;
+		}
+		
+		if(typename.equals("tank1")) {
+			temp = new Tank1(100,100, 3*Math.PI/4,background.getwall(),plylist, cset); 
+		}
+		else if(typename.equals("tank2")) {
+			temp = new Tank2(100,100, 3*Math.PI/4,background.getwall(),plylist, cset); 
+		}
+		else if(typename.equals("tank3")) {
+			temp = new Tank3(100,100, 3*Math.PI/4,background.getwall(),plylist, cset);
+		}
+		else {
+			System.out.println("Tank selection error");
+			System.exit(0);
+		}
+			
+		if(tank.equals("tanker1"))
+			tanker1 = temp;
+		else if(tank.equals("tanker2"))
+			tanker2 = temp;
+		
 	}
 	
 	private void returntoMenu() {

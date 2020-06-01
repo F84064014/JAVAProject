@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 public class Tank1 extends Tank{
 
-	final private int MAX_HEALTH=100;
+	final private int MAX_HEALTH=700;
 	final private double ROTATION_RAD = 0.65;
 	final private double MOVING_SPEED = 1;
 	final private int MAX_AMMO = 5;

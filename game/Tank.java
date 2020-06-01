@@ -317,15 +317,19 @@ public abstract class Tank {
 		//wall collision
 		for(wall obj: wallist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), (int)obj.getW(),(int)obj.getH());
-			if(rr.intersects(target))
+			if(rr.intersects(target)) {
 				return true;
+			}
 		}
 		
 		//player collision
 		for(Tank obj: playerlist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), obj.getWidth(), obj.getHeight());
-			if(rr.intersects(target))
+			if(rr.intersects(target)) {
+				System.out.println(dx);
+				System.out.println(dy);
 				return true;
+			}
 		}
 		
 		rr = null; target = null;

@@ -6,12 +6,12 @@ import javax.swing.ImageIcon;
 
 public class Tank2 extends Tank{
 	
-	final private int MAX_HEALTH= 200;
+	final private int MAX_HEALTH= 1000;
 	final private double ROTATION_RAD = 0.65;
 	final private double MOVING_SPEED = 0.5;
 	final private int MAX_AMMO = 1;
 	final private int CD_AMMO = 3;
-	final private int DAMAGE = 20;
+	final private int DAMAGE = 50;
 	final private int SHELL_SPEED = 13;
 	
 	public int getMAX_ARMOR() {

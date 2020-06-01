@@ -12,7 +12,10 @@ public class BtnListener implements ActionListener{
 	
 	private Board gameboard;
 	private List<String> maplist;
+	private List<String> tanklist;
 	private int curmap;
+	private int curtank1;
+	private int curtank2;
 	
 	
 	public BtnListener(Board b) {
@@ -22,6 +25,13 @@ public class BtnListener implements ActionListener{
 		maplist.add("test1");
 		maplist.add("test2");
 		curmap=0;
+		
+		tanklist = new ArrayList<String>();
+		tanklist.add("tank1");
+		tanklist.add("tank2");
+		tanklist.add("tank3");
+		curtank1 = 0;
+		curtank2 = 0;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -62,6 +72,30 @@ public class BtnListener implements ActionListener{
 			if(curmap < 0)
 				curmap = maplist.size()-1;
 			this.gameboard.setGameMap(maplist.get(curmap));
+		}
+		if(comStr.equals("nextTank1")) {
+			curtank1++;
+			if(curtank1 >= maplist.size())
+				curtank1 = 0;
+			this.gameboard.setTankType(tanklist.get(curtank1), "tanker1");
+		}
+		if(comStr.equals("lastTank1")) {
+			curtank1++;
+			if(curtank1 >= maplist.size())
+				curtank1 = 0;
+			this.gameboard.setTankType(tanklist.get(curtank1), "tanker1");
+		}
+		if(comStr.equals("nextTank2")) {
+			curtank2++;
+			if(curtank2 >= maplist.size())
+				curtank2 = 0;
+			this.gameboard.setTankType(tanklist.get(curtank2), "tanker2");
+		}
+		if(comStr.equals("lastTank2")) {
+			curtank2++;
+			if(curtank2 >= maplist.size())
+				curtank2 = 0;
+			this.gameboard.setTankType(tanklist.get(curtank2),"tanker2");
 		}
 	}
 }
