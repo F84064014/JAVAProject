@@ -8,13 +8,14 @@ import javax.swing.ImageIcon;
 
 public class Tank3 extends Tank{
 
-	final private int MAX_HEALTH= 500;
+	final private int MAX_HEALTH= 1000;
 	final private double ROTATION_RAD = 0.65;
 	final private double MOVING_SPEED = 1.3;
-	final private int MAX_AMMO = 200;
+	final private int MAX_AMMO = 400;
 	final private int CD_AMMO = 10;
 	final private int DAMAGE = 2;
 	final private int SHELL_SPEED = 13;
+	final private long REFILL_CD = 5000;
 	private long refillCD;
 	
 	public int getMAX_ARMOR() {
@@ -38,13 +39,15 @@ public class Tank3 extends Tank{
 	public int getSHELL_SPEED() {
 		return this.SHELL_SPEED;
 	}
+	public long getREFILL_CD() {
+		return this.REFILL_CD;
+	}
 	
-	public Tank3(int startx, int starty, double startangle, List<wall> wl,List<Tank> pl, String ctrset) {
+	public Tank3(int startx, int starty, double startangle, List<Wall> wl,List<Tank> pl, String ctrset) {
 		super(startx, starty, startangle, wl, pl, ctrset);
 		loadImage();
 		resetArmor();
 		setAmmo(this.MAX_AMMO);
-		setCDAmmo(this.CD_AMMO);
 	}
 	
 	
@@ -124,10 +127,10 @@ public class Tank3 extends Tank{
 			Shell temp = new Shell(getX()+(getWidth()/2)+((getHeight()+4)*Math.sin(startangle))/2, getY()+(getHeight()/2)-((getHeight()+4)*Math.cos(startangle)/2), startangle,getWallist(), getDAMAGE(), getSHELL_SPEED());
 			getShell().add(temp);
 			if(getAmmo()==0)
-				refillCD = 5000+System.currentTimeMillis();
+				setCD(REFILL_CD+System.currentTimeMillis());
 		}
 		else if(getAmmo()==0) {
-			if(System.currentTimeMillis() >= refillCD) {
+			if(System.currentTimeMillis() >= getCD()) {
 				setAmmo(this.MAX_AMMO);
 			}
 		}

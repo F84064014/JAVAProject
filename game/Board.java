@@ -7,7 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -156,12 +158,26 @@ public class Board extends JPanel implements ActionListener{
 	private void doDrawing(Graphics g) {
 		
 		Graphics2D g2d = (Graphics2D) g;
+		Graphics2D gbc = (Graphics2D) g;
 		Graphics2D gsc = (Graphics2D) g;
+		Graphics2D gbu = (Graphics2D) g;
 		AffineTransform initTrans = new AffineTransform(); //initialization
         AffineTransform t = new AffineTransform();//tanker
         AffineTransform t2 = new AffineTransform();//tanker2
         AffineTransform s = new AffineTransform();//shell
         AffineTransform w = new AffineTransform();//wall
+        
+        //background graph
+//		g2d.drawImage(background.getImage(), 0,0,this);
+        Color grass = new Color(75,180,0);
+        gbc.setColor(grass);
+        gbc.fillRect(0, 0, 750, 600);
+        gbc.setColor(Color.black);
+        for(int i=0; i<750; i+=100) 
+        	gbc.drawLine(i,0,i,600);
+        for(int i=0; i<600; i+= 100)
+        	gbc.drawLine(0, i, 750, i);
+        
         
         //tanker1 graph
         t.rotate(tanker1.getAngle(), tanker1.getX()+tanker1.getWidth()/2, tanker1.getY()+tanker1.getHeight()/2);
@@ -177,6 +193,24 @@ public class Board extends JPanel implements ActionListener{
         		gsc.drawLine((int)tanker1.getX()-10,i,((int)tanker1.getX()+(int)((double)tanker1.getArmor()/(double)tanker1.getMAX_ARMOR()*40))-10,i);
         	}
         }
+        //tanker1 Ammo graph
+        gsc.setColor(Color.GRAY);
+        if(tanker1.getAmmo()>0) {
+        	for(int i=(int)tanker1.getY()-15; i<(int)tanker1.getY()-15+2;i++) {
+           		gsc.drawLine((int)tanker1.getX()-10,i,((int)tanker1.getX()+(int)((double)tanker1.getAmmo()/(double)tanker1.getMAX_AMMO()*40))-10,i);
+        	}
+        }
+        else if(tanker1.getAmmo()==0) {
+        	int end = 0;
+        	for(int i=(int)tanker1.getY()-15; i<(int)tanker1.getY()-15+2;i++) {
+        		System.out.println(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD());
+        		if(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD()<=1)
+        			end = ((int)tanker1.getX()+(int)(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD()*40))-10;
+        		else        			
+        			end = ((int)tanker1.getX()+40-10);        		
+        		gsc.drawLine((int)tanker1.getX()-10,i,end,i);
+        	}
+        }
         
 
         //tanker2 graph
@@ -187,11 +221,32 @@ public class Board extends JPanel implements ActionListener{
 		gsc.setColor(Color.BLACK);
         gsc.drawRect((int)tanker2.getX()-10, (int)tanker2.getY()-20,40, 5);
       	gsc.setColor(Color.RED);
+      	//tanker2 Armor graph
         if(tanker2.getArmor() > 0) {
         	for(int i=(int)tanker2.getY()-20; i<(int)tanker2.getY()-20+5;i++) {
         		gsc.drawLine((int)tanker2.getX()-10,i,((int)tanker2.getX()+(int)((double)tanker2.getArmor()/(double)tanker2.getMAX_ARMOR()*40))-10,i);
         	}
         }
+        //tanker2 Ammo graph
+        //tanker1 Ammo graph
+        gsc.setColor(Color.GRAY);
+        if(tanker2.getAmmo()>0) {
+        	for(int i=(int)tanker2.getY()-15; i<(int)tanker2.getY()-15+2;i++) {
+           		gsc.drawLine((int)tanker2.getX()-10,i,((int)tanker2.getX()+(int)((double)tanker2.getAmmo()/(double)tanker2.getMAX_AMMO()*40))-10,i);
+        	}
+        }
+        else if(tanker2.getAmmo()==0) {
+        	int end = 0;
+        	for(int i=(int)tanker2.getY()-15; i<(int)tanker2.getY()-15+2;i++) {
+        		System.out.println(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD());
+        		if(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD()<=1)
+        			end = ((int)tanker2.getX()+(int)(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD()*40))-10;
+        		else        			
+        			end = ((int)tanker2.getX()+40-10);        		
+        		gsc.drawLine((int)tanker2.getX()-10,i,end,i);
+        	}
+        }
+        
 		
         //shell for tanker graph
         if(tanker1.getShell()!=null) {
@@ -217,16 +272,14 @@ public class Board extends JPanel implements ActionListener{
         
         //wall graph
         if(background.getwall()!=null) {
-        	for(wall obj: background.getwall()) {
+        	for(Wall obj: background.getwall()) {
         		w.setTransform(initTrans);
         		w.translate(obj.getX(), obj.getY());
         		w.scale(1, 1); // scale = 1
         		g2d.drawImage(obj.getImage(),w, this);
         	}
         }
-		
-		//background graph
-		//g2d.drawImage(background.getImage(), 500,500,this);
+        
         
         if(gamestatus!=NEXT) {
         	Graphics2D gwd = (Graphics2D)g;
@@ -243,11 +296,14 @@ public class Board extends JPanel implements ActionListener{
 	
 	public void DrawMenu(Graphics g){
 		
+		this.setBackground(new Color(205,225,119));
+		
 		//menu animation
     	Graphics2D g2d = (Graphics2D)g;
     	AffineTransform initTrans = new AffineTransform();//initilization
         AffineTransform animation = new AffineTransform();//animation
         AffineTransform tankdemo = new AffineTransform();
+        
         
         //draw animation
         animation.rotate(animationangle, animationx+menuanimation.getWidth(null)/2, animationy+menuanimation.getHeight(null)/2);

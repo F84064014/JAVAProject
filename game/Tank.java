@@ -20,14 +20,14 @@ public abstract class Tank {
 	private int h;
 	private double angle;
 	private List<Shell> tankshell;
-	private List<wall> wallist;
+	private List<Wall> wallist;
 	private List<Integer> keybuffer;
 	private List<Integer> controlset;
 	private List<Tank> playerlist;
 	private Image image;
 	private int armor;
 	private int ammo;
-	private int cdammo;
+	private long CD;
 	
 		//abstract method
 	protected abstract void loadImage();
@@ -38,9 +38,10 @@ public abstract class Tank {
 	public abstract int getCD_AMMO();
 	public abstract int getDAMAGE();
 	public abstract int getSHELL_SPEED();
+	public abstract long getREFILL_CD();
 	
 	
-	public Tank(int startx, int starty,double startangle, List<wall> wl, List<Tank> pl, String ctrset) {
+	public Tank(int startx, int starty,double startangle, List<Wall> wl, List<Tank> pl, String ctrset) {
 		armor = getMAX_ARMOR();
 		x = startx;
 		y = starty;
@@ -66,8 +67,7 @@ public abstract class Tank {
 			controlset.add(KeyEvent.VK_F);
 		}
 		ammo = getMAX_AMMO();
-		cdammo = getCD_AMMO();
-		
+		CD = 0;
 	}
 	
 	public void keyPressed(KeyEvent e) {
@@ -115,9 +115,9 @@ public abstract class Tank {
 	public void move() {
 		
 		if(keybuffer.contains(controlset.get(3)))
-			da = 3*Math.toRadians(this.getROTATION_RAD());
+			da = 1.5*Math.toRadians(this.getROTATION_RAD());
 		if(keybuffer.contains(controlset.get(2)))
-			da = 3*Math.toRadians(-this.getROTATION_RAD());
+			da = 1.5*Math.toRadians(-this.getROTATION_RAD());
 		if(keybuffer.contains(controlset.get(0))) {
 			if(keybuffer.contains(controlset.get(3))) {
 				dx = getMOVING_SPEED()*Math.sin(this.angle+da);
@@ -221,10 +221,6 @@ public abstract class Tank {
 		return this.ammo;
 	}
 	
-	public void setCDAmmo(int pc) {
-		this.cdammo = pc;
-	}
-	
 	public List<Integer> getControlSet() {
 		return controlset;
 	}
@@ -232,7 +228,7 @@ public abstract class Tank {
 	public List<Integer> getKeyBuffer(){
 		return keybuffer;
 	}
-	public List<wall> getWallist(){
+	public List<Wall> getWallist(){
 		return wallist;
 	}
 	public void setDX(double d) {
@@ -253,6 +249,15 @@ public abstract class Tank {
 	public double getDA() {
 		return da;
 	}
+	public long getCDLast() {
+		return CD-System.currentTimeMillis();
+	}
+	public void setCD(long cd) {
+		this.CD = cd;
+	}
+	public long getCD() {
+		return this.CD;
+	}
 	
 	public void fire() {
 		if(this.ammo >= 1)
@@ -260,18 +265,15 @@ public abstract class Tank {
 			this.ammo--;
 			Shell temp = new Shell(x+(w/2)+((h+4)*Math.sin(angle))/2, y+(h/2)-((h+4)*Math.cos(angle)/2), angle,wallist, getDAMAGE(), getSHELL_SPEED());
 			tankshell.add(temp);
-	
-		}
-		else // reload
-		{
-			this.cdammo--;
-			if(this.cdammo <= 0)
-			{
-				this.cdammo = getCD_AMMO();
-				this.ammo = getMAX_AMMO();
+			if(this.ammo == 0) {
+				CD = System.currentTimeMillis()+getREFILL_CD();
 			}
 		}
-
+		else if(this.ammo == 0) {
+			if(System.currentTimeMillis() >= CD) {
+				this.ammo = this.getMAX_AMMO();
+			}
+		}
 	}
 	
 	public int right()
@@ -294,7 +296,6 @@ public abstract class Tank {
 	protected void resetArmor() {
 		this.armor = getMAX_ARMOR();
 		ammo = getMAX_AMMO();
-		cdammo = getCD_AMMO();
 	}
 	protected void setPosition(double px, double py, double pangle) {
 		this.x = px;
@@ -315,7 +316,7 @@ public abstract class Tank {
 		}
 		
 		//wall collision
-		for(wall obj: wallist) {
+		for(Wall obj: wallist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), (int)obj.getW(),(int)obj.getH());
 			if(rr.intersects(target)) {
 				return true;

@@ -4,7 +4,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-public class wall {
+public class Wall {
 	
 	private double x;
 	private double y;
@@ -12,7 +12,7 @@ public class wall {
 	private double w;
 	private double h;
 	
-	public wall(double wallx, double wally, String filepath) {
+	public Wall(double wallx, double wally, String filepath) {
 		
 		ImageIcon ii = new ImageIcon(filepath);
 		image = ii.getImage();
@@ -21,7 +21,6 @@ public class wall {
 		y = wally;
 		w = image.getWidth(null);
 		h = image.getHeight(null);
-	
 		
 	}
 

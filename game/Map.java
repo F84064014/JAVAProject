@@ -11,7 +11,7 @@ public class Map {
 	private int w;
 	private int h;
 	private List<kit> kitlist;
- 	private List<wall> wallist;
+ 	private List<Wall> wallist;
  	private Image image;
 	private String name;
 
@@ -25,13 +25,13 @@ public class Map {
 		x = 400;
 		y = 300;
 		kitlist = new ArrayList<kit>();
-		wallist = new ArrayList<wall>();
+		wallist = new ArrayList<Wall>();
 		setMap("default");
 	}
 	
 	protected void loadImage() {
 		
-		ImageIcon ii = new ImageIcon("src/resources/Xi.png");
+		ImageIcon ii = new ImageIcon("src/resources/grass.png");
 		image = ii.getImage();
 		
 		w = image.getWidth(null);
@@ -50,7 +50,7 @@ public class Map {
 		return y;
 	}
 	
-	public List<wall> getwall(){
+	public List<Wall> getwall(){
 		return wallist;
 	}
 	
@@ -63,20 +63,20 @@ public class Map {
 		wallist.clear();
 		kitlist.clear();
 		if(mapname.equals("default")) {
-			wall w1 = new wall(325,275,"src/resources/bedrock.png");
-			wall w2 = new wall(375, 275, "src/resources/bedrock.png");
-			wall w3 = new wall(400, 400, "src/resources/bedrock.png");
+			Wall w1 = new Wall(325,275,"src/resources/bedrock.png");
+			Wall w2 = new Wall(375, 275, "src/resources/bedrock.png");
+			Wall w3 = new Wall(400, 400, "src/resources/bedrock.png");
 			wallist.add(w1);
 			wallist.add(w2);
 			wallist.add(w3);
 		}
 		if(mapname.equals("test1")) {
-			wall w1 = new wall(300, 300, "src/resources/xx.png");
+			Wall w1 = new Wall(300, 300, "src/resources/xx.png");
 			wallist.add(w1);
 		}
 		if(mapname.equals("test2")) {
-			wall w1 = new wall(400, 388, "src/resources/xx.png");
-			wall w2 = new wall(444,333, "src/resources/bedrock.png");
+			Wall w1 = new Wall(400, 388, "src/resources/xx.png");
+			Wall w2 = new Wall(444,333, "src/resources/bedrock.png");
 			wallist.add(w1);
 			wallist.add(w2);
 		}
