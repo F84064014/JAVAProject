@@ -327,8 +327,6 @@ public abstract class Tank {
 		for(Tank obj: playerlist) {
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), obj.getWidth(), obj.getHeight());
 			if(rr.intersects(target)) {
-				System.out.println(dx);
-				System.out.println(dy);
 				return true;
 			}
 		}

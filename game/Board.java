@@ -160,7 +160,6 @@ public class Board extends JPanel implements ActionListener{
 		Graphics2D g2d = (Graphics2D) g;
 		Graphics2D gbc = (Graphics2D) g;
 		Graphics2D gsc = (Graphics2D) g;
-		Graphics2D gbu = (Graphics2D) g;
 		AffineTransform initTrans = new AffineTransform(); //initialization
         AffineTransform t = new AffineTransform();//tanker
         AffineTransform t2 = new AffineTransform();//tanker2
@@ -203,7 +202,6 @@ public class Board extends JPanel implements ActionListener{
         else if(tanker1.getAmmo()==0) {
         	int end = 0;
         	for(int i=(int)tanker1.getY()-15; i<(int)tanker1.getY()-15+2;i++) {
-        		System.out.println(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD());
         		if(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD()<=1)
         			end = ((int)tanker1.getX()+(int)(((double)tanker1.getREFILL_CD()-(double)tanker1.getCDLast())/(double)tanker1.getREFILL_CD()*40))-10;
         		else        			
@@ -238,7 +236,6 @@ public class Board extends JPanel implements ActionListener{
         else if(tanker2.getAmmo()==0) {
         	int end = 0;
         	for(int i=(int)tanker2.getY()-15; i<(int)tanker2.getY()-15+2;i++) {
-        		System.out.println(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD());
         		if(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD()<=1)
         			end = ((int)tanker2.getX()+(int)(((double)tanker2.getREFILL_CD()-(double)tanker2.getCDLast())/(double)tanker2.getREFILL_CD()*40))-10;
         		else        			
@@ -247,8 +244,18 @@ public class Board extends JPanel implements ActionListener{
         	}
         }
         
-		
-        //shell for tanker graph
+        
+        //wall graph
+        if(background.getwall()!=null) {
+        	for(Wall obj: background.getwall()) {
+        		w.setTransform(initTrans);
+        		w.translate(obj.getX(), obj.getY());
+        		w.scale(1, 1); // scale = 1
+        		g2d.drawImage(obj.getImage(),w, this);
+        	}
+        }
+        
+        //shell for tanker1 graph
         if(tanker1.getShell()!=null) {
         	for(Shell obj: tanker1.getShell()) {
         		s.setTransform(initTrans);
@@ -269,17 +276,6 @@ public class Board extends JPanel implements ActionListener{
         		g2d.drawImage(obj.getImage(), s, this);
         	}
         }
-        
-        //wall graph
-        if(background.getwall()!=null) {
-        	for(Wall obj: background.getwall()) {
-        		w.setTransform(initTrans);
-        		w.translate(obj.getX(), obj.getY());
-        		w.scale(1, 1); // scale = 1
-        		g2d.drawImage(obj.getImage(),w, this);
-        	}
-        }
-        
         
         if(gamestatus!=NEXT) {
         	Graphics2D gwd = (Graphics2D)g;
@@ -406,8 +402,8 @@ public class Board extends JPanel implements ActionListener{
 		tanker2.resetArmor();
     	tanker1.getShell().clear();
     	tanker2.getShell().clear();
-		tanker1.setPosition(100,100, 3*Math.PI/4);
-		tanker2.setPosition(600,500, -Math.PI/4);
+		tanker1.setPosition(background.getp1StartX(),background.getp1StartY(), background.getp1StartA());
+		tanker2.setPosition(background.getp2StartX(),background.getp2StartY(), background.getp2StartA());
 		playerlist1.clear();
 		playerlist2.clear();
 		playerlist2.add(tanker1);

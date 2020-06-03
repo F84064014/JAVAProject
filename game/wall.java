@@ -11,6 +11,7 @@ public class Wall {
 	private Image image;
 	private double w;
 	private double h;
+	private boolean IgnoreShell;
 	
 	public Wall(double wallx, double wally, String filepath) {
 		
@@ -21,7 +22,7 @@ public class Wall {
 		y = wally;
 		w = image.getWidth(null);
 		h = image.getHeight(null);
-		
+		IgnoreShell = false;
 	}
 
 	public double getX() {
@@ -46,5 +47,11 @@ public class Wall {
 	public int bottom()
 	{
 		return (int)(y+h);
+	}
+	public void setIgnoreShell() {
+		this.IgnoreShell = true;
+	}
+	public boolean getIgnoreShell() {
+		return IgnoreShell;
 	}
 }

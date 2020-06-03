@@ -92,6 +92,8 @@ public class Shell{
 		//wall collision
 		for(Wall obj: wallist)
 		{
+			if(obj.getIgnoreShell() == true)
+				continue;
 			target = new Rectangle((int)obj.getX(), (int)obj.getY(), (int)obj.getW(),(int)obj.getH());
 			if(traject.intersects(target))
 				return false;
