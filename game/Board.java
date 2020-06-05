@@ -10,6 +10,7 @@ import java.awt.Rectangle;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
+import java.awt.Event;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
@@ -42,6 +43,7 @@ public class Board extends JPanel implements ActionListener{
 	public static final int NEXT = 4;
 	public static final int MENU = 5;
 	public static final int RESTART = 6;
+	public static final int PAUSE = 7;
 	
 	private List<JButton> menubtnlist;
 	private List<JButton> returnbtnlist;
@@ -356,6 +358,9 @@ public class Board extends JPanel implements ActionListener{
 			updateGameSet();
 			gamestatus = NEXT;
 		}
+		if(gamestatus == Board.PAUSE) {
+			returntoMenu();
+		}
 	}
 	
 	private void updateTanker() {
@@ -468,6 +473,7 @@ public class Board extends JPanel implements ActionListener{
 	}
 
 	
+	
 	private class TAdapter extends KeyAdapter{
 		
 		@Override
@@ -480,9 +486,23 @@ public class Board extends JPanel implements ActionListener{
 		
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if(gamestatus != MENU) {
+			if(gamestatus != MENU && gamestatus != PAUSE) {
 				tanker1.keyPressed(e);
 				tanker2.keyPressed(e);
+				int key = e.getKeyCode();
+				if(key == KeyEvent.VK_ESCAPE) {
+					if(gamestatus == NEXT)
+						gamestatus = PAUSE;
+				}
+			}
+			else if (gamestatus == PAUSE) {
+				int key = e.getKeyCode();
+				if(key == KeyEvent.VK_ESCAPE) {
+					for(JButton obj: returnbtnlist) {
+						obj.setVisible(false);
+					}
+					gamestatus = NEXT;
+				}
 			}
 		}
 	}

@@ -114,10 +114,10 @@ public abstract class Tank {
 	
 	public void move() {
 		
-		if(keybuffer.contains(controlset.get(3)))
-			da = 1.5*Math.toRadians(this.getROTATION_RAD());
-		if(keybuffer.contains(controlset.get(2)))
-			da = 1.5*Math.toRadians(-this.getROTATION_RAD());
+//		if(keybuffer.contains(controlset.get(3)))
+//			da = 1.5*Math.toRadians(this.getROTATION_RAD());
+//		if(keybuffer.contains(controlset.get(2)))
+//			da = 1.5*Math.toRadians(-this.getROTATION_RAD());
 		if(keybuffer.contains(controlset.get(0))) {
 			if(keybuffer.contains(controlset.get(3))) {
 				dx = getMOVING_SPEED()*Math.sin(this.angle+da);
