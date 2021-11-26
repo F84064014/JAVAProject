@@ -1,7 +1,7 @@
 # JAVAProject-Tank Game
 
 ## Demo Video
-![demo video]()
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=XHlNyyPCrTU)
 
 ## Tank
 Three type of Tanke
